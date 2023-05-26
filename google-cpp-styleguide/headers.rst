@@ -38,9 +38,9 @@
 .. code-block:: c++
 
     #ifndef FOO_BAR_BAZ_H_
-    #define FOO_BAR_BAZ_H_
+       #define FOO_BAR_BAZ_H_
     ...
-    #endif // FOO_BAR_BAZ_H_
+    #endif   // FOO_BAR_BAZ_H_
 
 .. _forward-declarations:
 
@@ -69,15 +69,15 @@
 
 		.. code-block:: c++
 
-			// b.h:
-			struct B {};
-			struct D : B {};
+                       // b.h:
+                       struct B {};
+                       struct D: B {};
 
-			// good_user.cc:
-			#include "b.h"
-			void f(B*);
-			void f(void*);
-			void test(D* x) { f(x); }  // calls f(B*)
+                       // good_user.cc:
+                       #include "b.h"
+                       void f( B* );
+                       void f( void* );
+                       void test( D* x ) { f( x ); }   // calls f(B*)
 
 	 如果 ``#include`` 被 ``B`` 和 ``D`` 的前置声明替代， ``test()`` 就会调用 ``f(void*)`` .
 
@@ -180,7 +180,7 @@ __ forward-declarations_
 		#include "base/port.h"  // For LANG_CXX11.
 
 		#ifdef LANG_CXX11
-		#include <initializer_list>
+		   #include <initializer_list>
 		#endif  // LANG_CXX11
 
 译者 (YuleFox) 笔记
