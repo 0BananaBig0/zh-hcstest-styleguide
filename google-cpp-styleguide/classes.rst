@@ -56,17 +56,17 @@
 .. code-block:: c++
 
     class Foo {
-      explicit Foo(int x, double y);
-      ...
+          explicit Foo( int x, double y );
+          ...
     };
 
-    void Func(Foo f);
+    void Func( Foo f );
 
 此时下面的代码是不允许的:
 
 .. code-block:: c++
 
-    Func({42, 3.14});  // Error
+    Func( { 42, 3.14 } );   // Error
 
 这一代码从技术上说并非隐式类型转换, 但是语言标准认为这是 ``explicit`` 应当限制的行为.
 
@@ -96,7 +96,7 @@
 
 在类型定义中, 类型转换运算符和单参数构造函数都应当用 ``explicit`` 进行标记. 一个例外是, 拷贝和移动构造函数不应当被标记为 ``explicit``, 因为它们并不执行类型转换. 对于设计目的就是用于对其他类型进行透明包装的类来说, 隐式类型转换有时是必要且合适的. 这时应当联系项目组长并说明特殊情况.
 
-不能以一个参数进行调用的构造函数不应当加上 ``explicit``. 接受一个 ``std::initializer_list`` 作为参数的构造函数也应当省略 ``explicit``, 以便支持拷贝初始化 (例如 ``MyType m = {1, 2};``).
+不能以一个参数进行调用的构造函数不应当加上 ``explicit``. 接受一个 ``std::initializer_list`` 作为参数的构造函数也应当省略 ``explicit``, 以便支持拷贝初始化 (例如 ``MyType m = { 1, 2 };``).
 
 .. _copyable-and-movable-types:
 
@@ -111,7 +111,7 @@
 
 可拷贝类型允许对象在初始化时得到来自相同类型的另一对象的值, 或在赋值时被赋予相同类型的另一对象的值, 同时不改变源对象的值. 对于用户定义的类型, 拷贝操作一般通过拷贝构造函数与拷贝赋值操作符定义. ``string`` 类型就是一个可拷贝类型的例子.
 
-可移动类型允许对象在初始化时得到来自相同类型的临时对象的值, 或在赋值时被赋予相同类型的临时对象的值 (因此所有可拷贝对象也是可移动的). ``std::unique_ptr<int>`` 就是一个可移动但不可复制的对象的例子. 对于用户定义的类型, 移动操作一般是通过移动构造函数和移动赋值操作符实现的.
+可移动类型允许对象在初始化时得到来自相同类型的临时对象的值, 或在赋值时被赋予相同类型的临时对象的值 (因此所有可拷贝对象也是可移动的). ``std::unique_ptr< int >`` 就是一个可移动但不可复制的对象的例子. 对于用户定义的类型, 移动操作一般是通过移动构造函数和移动赋值操作符实现的.
 
 拷贝 / 移动构造函数在某些情况下会被编译器隐式调用. 例如, 通过传值的方式传递对象.
 
@@ -138,12 +138,12 @@
 .. code-block:: c++
 
     class Foo {
-     public:
-      Foo(Foo&& other) : field_(other.field) {}
-      // 差, 只定义了移动构造函数, 而没有定义对应的赋值运算符.
+       public:
+          Foo( Foo&& other ): field_( other.field ) {}
+          // 差, 只定义了移动构造函数, 而没有定义对应的赋值运算符.
 
-     private:
-      Field field_;
+       private:
+          Field field_;
     };
 
 由于存在对象切割的风险, 不要为任何有可能有派生类的对象提供赋值操作或者拷贝 / 移动构造函数 (当然也不要继承有这样的成员函数的类). 如果你的基类需要可复制属性, 请提供一个 ``public virtual Clone()`` 和一个 ``protected`` 的拷贝构造函数以供派生类实现.
@@ -153,8 +153,8 @@
 .. code-block:: c++
 
     // MyClass is neither copyable nor movable.
-    MyClass(const MyClass&) = delete;
-    MyClass& operator=(const MyClass&) = delete;
+    MyClass( const MyClass& ) = delete;
+    MyClass& operator=( const MyClass& ) = delete;
 
 .. _structs-vs-classes:
 
