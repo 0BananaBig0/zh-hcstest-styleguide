@@ -10,11 +10,11 @@
 
 定义:
 
-    在 C 语言中, 如果函数需要修改变量的值, 参数必须为指针, 如 ``int foo(int *pval)``. 在 C++ 中, 函数还可以声明引用参数: ``int foo(int &val)``.
+    在 C 语言中, 如果函数需要修改变量的值, 参数必须为指针, 如 ``int foo( int* pval )``. 在 C++ 中, 函数还可以声明引用参数: ``int foo( int& val )``.
 
 优点:
 
-    定义引用参数防止出现 ``(*pval)++`` 这样丑陋的代码. 像拷贝构造函数这样的应用也是必需的. 而且更明确, 不接受 ``NULL`` 指针.
+    定义引用参数防止出现 ``( *pval )++`` 这样丑陋的代码. 像拷贝构造函数这样的应用也是必需的. 而且更明确, 不接受 ``NULL`` 指针.
 
 缺点:
 
@@ -26,7 +26,7 @@
 
         .. code-block:: c++
 
-            void Foo(const string &in, string *out);
+            void Foo( const string& in, string* out );
 
     事实上这在 Google Code 是一个硬性约定: 输入参数是值参或 ``const`` 引用, 输出参数为指针. 输入参数可以是 ``const`` 指针, 但决不能是非 ``const`` 的引用参数，除非用于交换，比如 ``swap()``.
 
@@ -46,11 +46,11 @@
 
 定义:
 
-	右值引用是一种只能绑定到临时对象的引用的一种, 其语法与传统的引用语法相似. 例如, ``void f(string&& s)``; 声明了一个其参数是一个字符串的右值引用的函数.
+	右值引用是一种只能绑定到临时对象的引用的一种, 其语法与传统的引用语法相似. 例如, ``void f( string&& s )``; 声明了一个其参数是一个字符串的右值引用的函数.
 
 优点:
 
-	用于定义移动构造函数 (使用类的右值引用进行构造的函数) 使得移动一个值而非拷贝之成为可能. 例如, 如果 ``v1`` 是一个 ``vector<string>``, 则 ``auto v2(std::move(v1))`` 将很可能不再进行大量的数据复制而只是简单地进行指针操作, 在某些情况下这将带来大幅度的性能提升.
+	用于定义移动构造函数 (使用类的右值引用进行构造的函数) 使得移动一个值而非拷贝之成为可能. 例如, 如果 ``v1`` 是一个 ``vector< string >``, 则 ``auto v2( std::move( v1 ) )`` 将很可能不再进行大量的数据复制而只是简单地进行指针操作, 在某些情况下这将带来大幅度的性能提升.
 	
 	右值引用使得编写通用的函数封装来转发其参数到另外一个函数成为可能, 无论其参数是否是临时对象都能正常工作.
 	
@@ -82,9 +82,9 @@
         .. code-block:: c++
 
             class MyClass {
-                public:
-                void Analyze(const string &text);
-                void Analyze(const char *text, size_t textlen);
+               public:
+                  void Analyze( const string& text );
+                  void Analyze( const char* text, size_t textlen );
             };
 
 优点:
@@ -127,10 +127,10 @@
         .. code-block:: c++
 
             // 通过空 AlphaNum 以支持四个形参
-            string StrCat(const AlphaNum &a,
-                          const AlphaNum &b = gEmptyAlphaNum,
-                          const AlphaNum &c = gEmptyAlphaNum,
-                          const AlphaNum &d = gEmptyAlphaNum);
+            string StrCat( const AlphaNum& a,
+                           const AlphaNum& b = gEmptyAlphaNum,
+                           const AlphaNum& c = gEmptyAlphaNum,
+                           const AlphaNum& d = gEmptyAlphaNum );
 
 6.5. 变长数组和 alloca()
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -149,7 +149,7 @@
 
 结论:
 
-    改用更安全的分配器（allocator），就像 ``std::vector`` 或 ``std::unique_ptr<T[]>``.
+    改用更安全的分配器（allocator），就像 ``std::vector`` 或 ``std::unique_ptr< T[] >``.
 
 6.6. 友元
 ~~~~~~~~~~~~~~~~
@@ -231,12 +231,12 @@
 	
         .. code-block:: c++
 
-            bool Base::Equal(Base* other) = 0;
-            bool Derived::Equal(Base* other) {
-              Derived* that = dynamic_cast<Derived*>(other);
-              if (that == NULL)
-                return false;
-              ...
+            bool Base::Equal( Base* other ) = 0;
+            bool Derived::Equal( Base* other ) {
+               Derived* that = dynamic_cast< Derived* >( other );
+               if( that == NULL )
+                  return false;
+               ...
             }
 
 缺点:
@@ -259,11 +259,11 @@
 	
         .. code-block:: c++
         
-            if (typeid(*data) == typeid(D1)) {
-              ...
-            } else if (typeid(*data) == typeid(D2)) {
-              ...
-            } else if (typeid(*data) == typeid(D3)) {
+            if( typeid( *data ) == typeid( D1 ) ) {
+               ...
+            } else if( typeid( *data ) == typeid( D2 ) ) {
+               ...
+            } else if( typeid( *data ) == typeid( D3 ) ) {
             ...
             
 	一旦在类层级中加入新的子类, 像这样的代码往往会崩溃. 而且, 一旦某个子类的属性改变了, 你很难找到并修改所有受影响的代码块.
@@ -343,12 +343,14 @@
 
         .. code-block:: c++
 
-            cerr << "Error connecting to '" << foo->bar()->hostname.first
-                 << ":" << foo->bar()->hostname.second << ": " << strerror(errno);
-
-            fprintf(stderr, "Error connecting to '%s:%u: %s",
-                    foo->bar()->hostname.first, foo->bar()->hostname.second,
-                    strerror(errno));
+            cerr << "Error connecting to '" << foo->bar()->hostname.first << ":"
+                 << foo->bar()->hostname.second << ": " << strerror( errno );
+            
+            fprintf( stderr,
+                     "Error connecting to '%s:%u: %s",
+                     foo->bar()->hostname.first,
+                     foo->bar()->hostname.second,
+                     strerror( errno ) );
 
     你可能会说, "把流封装一下就会比较好了", 这儿可以, 其他地方呢? 而且不要忘了, 我们的目标是使语言更紧凑, 而不是添加一些别人需要学习的新装备.
 
@@ -386,7 +388,7 @@
 
 定义:
 
-    在声明的变量或参数前加上关键字 ``const`` 用于指明变量值不可被篡改 (如 ``const int foo`` ). 为类中的函数加上 ``const`` 限定符表明该函数不会修改类成员变量的状态 (如 ``class Foo { int Bar(char c) const; };``).
+    在声明的变量或参数前加上关键字 ``const`` 用于指明变量值不可被篡改 (如 ``const int foo`` ). 为类中的函数加上 ``const`` 限定符表明该函数不会修改类成员变量的状态 (如 ``class Foo { int Bar( char c ) const; };``).
 
 优点:
 
@@ -404,13 +406,13 @@
         - 尽可能将函数声明为 ``const``. 访问函数应该总是 ``const``. 其他不会修改任何数据成员, 未调用非 ``const`` 函数, 不会返回数据成员非 ``const`` 指针或引用的函数也应该声明成 ``const``.
         - 如果数据成员在对象构造之后不再发生变化, 可将其定义为 ``const``.
 
-    然而, 也不要发了疯似的使用 ``const``. 像 ``const int * const * const x;`` 就有些过了, 虽然它非常精确的描述了常量 ``x``. 关注真正有帮助意义的信息: 前面的例子写成 ``const int** x`` 就够了.
+    然而, 也不要发了疯似的使用 ``const``. 像 ``const int* const* const x;`` 就有些过了, 虽然它非常精确的描述了常量 ``x``. 关注真正有帮助意义的信息: 前面的例子写成 ``const int** x`` 就够了.
 
     关键字 ``mutable`` 可以使用, 但是在多线程中是不安全的, 使用时首先要考虑线程安全.
 
 ``const`` 的位置:
 
-    有人喜欢 ``int const *foo`` 形式, 不喜欢 ``const int* foo``, 他们认为前者更一致因此可读性也更好: 遵循了 ``const`` 总位于其描述的对象之后的原则. 但是一致性原则不适用于此, "不要过度使用" 的声明可以取消大部分你原本想保持的一致性. 将 ``const`` 放在前面才更易读, 因为在自然语言中形容词 (``const``) 是在名词 (``int``) 之前.
+    有人喜欢 ``int const* foo`` 形式, 不喜欢 ``const int* foo``, 他们认为前者更一致因此可读性也更好: 遵循了 ``const`` 总位于其描述的对象之后的原则. 但是一致性原则不适用于此, "不要过度使用" 的声明可以取消大部分你原本想保持的一致性. 将 ``const`` 放在前面才更易读, 因为在自然语言中形容词 (``const``) 是在名词 (``int``) 之前.
 
     这是说, 我们提倡但不强制 ``const`` 在前. 但要保持代码的一致性! (Yang.Y 注: 也就是不要在一些地方把 ``const`` 写在类型前面, 在其他地方又写在后面, 确定一种写法, 然后保持一致.)
 
@@ -476,7 +478,7 @@
 
         .. code-block:: c++
 
-            for (unsigned int i = foo.Length()-1; i >= 0; --i) ...
+            for( unsigned int i = foo.Length() - 1; i >= 0; --i ) ...
 
     上述循环永远不会退出! 有时 gcc 会发现该 bug 并报警, 但大部分情况下都不会. 类似的 bug 还会出现在比较有符合变量和无符号变量时. 主要是 C 的类型提升机制会致使无符号类型的行为出乎你的意料.
 
@@ -495,11 +497,11 @@
 
         // printf macros for size_t, in the style of inttypes.h
         #ifdef _LP64
-        #define __PRIS_PREFIX "z"
+           #define __PRIS_PREFIX "z"
         #else
-        #define __PRIS_PREFIX
+           #define __PRIS_PREFIX
         #endif
-
+        
         // Use these macros after a % in a printf format string
         // to get correct 32/64 bit behavior, like this:
         // size_t size = records.size();
@@ -528,7 +530,7 @@
 
     注意 ``PRI*`` 宏会被编译器扩展为独立字符串. 因此如果使用非常量的格式化字符串, 需要将宏的值而不是宏名插入格式中. 使用 ``PRI*`` 宏同样可以在 ``%`` 后包含长度指示符. 例如, ``printf("x = %30"PRIuS"\n", x)`` 在 32 位 Linux 上将被展开为 ``printf("x = %30" "u" "\n", x)``, 编译器当成 ``printf("x = %30u\n", x)`` 处理 (Yang.Y 注: 这在 MSVC 6.0 上行不通, VC 6 编译器不会自动把引号间隔的多个字符串连接一个长字符串).
 
-- 记住 ``sizeof(void *) != sizeof(int)``. 如果需要一个指针大小的整数要用 ``intptr_t``.
+- 记住 ``sizeof( void* ) != sizeof( int )``. 如果需要一个指针大小的整数要用 ``intptr_t``.
 
 - 你要非常小心的对待结构体对齐, 尤其是要持久化到磁盘上的结构体 (Yang.Y 注: 持久化 - 将数据按字节流顺序保存在磁盘文件或数据库中). 在 64 位系统中, 任何含有 ``int64_t``/``uint64_t`` 成员的类/结构体, 缺省都以 8 字节在结尾对齐. 如果 32 位和 64 位代码要共用持久化的结构体, 需要确保两种体系结构下的结构体对齐一致. 大多数编译器都允许调整结构体对齐. gcc 中可使用 ``__attribute__((packed))``. MSVC 则提供了 ``#pragma pack()`` 和 ``__declspec(align())`` (YuleFox 注, 解决方案的项目属性里也可以直接设置).
 
@@ -574,7 +576,7 @@
 
     整数用 ``0``, 实数用 ``0.0``, 这一点是毫无争议的.
 
-    对于指针 (地址值), 到底是用 ``0``, ``NULL`` 还是 ``nullptr``. C++11 项目用 ``nullptr``; C++03 项目则用 ``NULL``, 毕竟它看起来像指针。实际上，一些 C++ 编译器对 ``NULL`` 的定义比较特殊，可以输出有用的警告，特别是 ``sizeof(NULL)`` 就和 ``sizeof(0)`` 不一样。
+    对于指针 (地址值), 到底是用 ``0``, ``NULL`` 还是 ``nullptr``. C++11 项目用 ``nullptr``; C++03 项目则用 ``NULL``, 毕竟它看起来像指针。实际上，一些 C++ 编译器对 ``NULL`` 的定义比较特殊，可以输出有用的警告，特别是 ``sizeof( NULL )`` 就和 ``sizeof( 0 )`` 不一样。
 
     字符 (串) 用 ``'\0'``, 不仅类型正确而且可读性好.
 
@@ -583,25 +585,25 @@
 
 .. tip::
 
-    尽可能用 ``sizeof(varname)`` 代替 ``sizeof(type)``.
+    尽可能用 ``sizeof( varname )`` 代替 ``sizeof( type )``.
 
-    使用 ``sizeof(varname)`` 是因为当代码中变量类型改变时会自动更新. 您或许会用 ``sizeof(type)`` 处理不涉及任何变量的代码，比如处理来自外部或内部的数据格式，这时用变量就不合适了。
+    使用 ``sizeof( varname )`` 是因为当代码中变量类型改变时会自动更新. 您或许会用 ``sizeof( type )`` 处理不涉及任何变量的代码，比如处理来自外部或内部的数据格式，这时用变量就不合适了。
 
     .. code-block:: c++
 
         Struct data;
-        Struct data; memset(&data, 0, sizeof(data));
+        Struct data; memset( &data, 0, sizeof( data ) );
 
     .. warning::
         .. code-block:: c++
 
-            memset(&data, 0, sizeof(Struct));
+            memset( &data, 0, sizeof( Struct ) );
 
     .. code-block:: c++
 
-        if (raw_size < sizeof(int)) {
-            LOG(ERROR) << "compressed record not big enough for count: " << raw_size;
-            return false;
+        if( raw_size < sizeof( int ) ) {
+           LOG( ERROR ) << "compressed record not big enough for count: " << raw_size;
+           return false;
         }
 
 6.19. auto
@@ -617,10 +619,10 @@
 
     .. code-block:: c++
 
-        vector<string> v;
+        vector< string > v;
         ...
-        auto s1 = v[0];  // 创建一份 v[0] 的拷贝。
-        const auto& s2 = v[0];  // s2 是 v[0] 的一个引用。
+        auto s1 = v[0];          // 创建一份 v[0] 的拷贝。
+        const auto& s2 = v[0];   // s2 是 v[0] 的一个引用。
 
 优点：
 
@@ -628,13 +630,13 @@
 
     .. code-block:: c++
 
-        sparse_hash_map<string, int>::iterator iter = m.find(val);
+        sparse_hash_map< string, int >::iterator iter = m.find( val );
 
     返回类型好难读，代码目的也不够一目了然。重构其：
 
     .. code-block:: c++
 
-        auto iter = m.find(val);
+        auto iter = m.find( val );
 
     好多了。
 
@@ -642,7 +644,7 @@
 
     .. code-block:: c++
 
-        diagnostics::ErrorStatus* status = new diagnostics::ErrorStatus("xyz");
+        diagnostics::ErrorStatus* status = new diagnostics::ErrorStatus( "xyz" );
 
     有了 auto, 可以更方便地用中间变量，显式编写它们的类型轻松点。
 
@@ -652,7 +654,7 @@
 
     .. code-block:: c++
 
-        auto i = x.Lookup(key);
+        auto i = x.Lookup( key );
 
     看不出其类型是啥，x 的类型声明恐怕远在几百行之外了。
 
@@ -662,10 +664,10 @@
 
     .. code-block:: c++
 
-        auto x(3);  // 圆括号。
-        auto y{3};  // 大括号。
+        auto x( 3 );  // 圆括号。
+        auto y{ 3 };  // 大括号。
 
-    它们不是同一回事——``x`` 是 ``int``, ``y`` 则是 ``std::initializer_list<int>``. 其它一般不可见的代理类型（acgtyrant 注：normally-invisible proxy types, 它涉及到 C++ 鲜为人知的坑：`Why is vector<bool> not a STL container? <http://stackoverflow.com/a/17794965/1546088>`_）也有大同小异的陷阱。
+    它们不是同一回事——``x`` 是 ``int``, ``y`` 则是 ``std::initializer_list< int >``. 其它一般不可见的代理类型（acgtyrant 注：normally-invisible proxy types, 它涉及到 C++ 鲜为人知的坑：`Why is vector< bool > not a STL container? <http://stackoverflow.com/a/17794965/1546088>`_）也有大同小异的陷阱。
 
     如果在接口里用 ``auto``, 比如声明头文件里的一个常量，那么只要仅仅因为程序员一时修改其值而导致类型变化的话——API 要翻天覆地了。
 
@@ -688,80 +690,89 @@
 
     .. code-block:: c++
 
-        struct Point { int x; int y; };
-        Point p = {1, 2};
+        struct Point {
+              int x;
+              int y;
+        };
+        Point p = { 1, 2 };
 
     C++11 中，该特性得到进一步的推广，任何对象类型都可以被列表初始化。示范如下：
 
     .. code-block:: c++
 
         // Vector 接收了一个初始化列表。
-        vector<string> v{"foo", "bar"};
-
+        vector< string > v{ "foo", "bar" };
+        
         // 不考虑细节上的微妙差别，大致上相同。
         // 您可以任选其一。
-        vector<string> v = {"foo", "bar"};
-
+        vector< string > v = { "foo", "bar" };
+        
         // 可以配合 new 一起用。
-        auto p = new vector<string>{"foo", "bar"};
-
+        auto p = new vector< string >{ "foo", "bar" };
+        
         // map 接收了一些 pair, 列表初始化大显神威。
-        map<int, string> m = {{1, "one"}, {2, "2"}};
-
+        map< int, string > m = {
+           {1,  "one"},
+           { 2, "2"  }
+        };
+        
         // 初始化列表也可以用在返回类型上的隐式转换。
-        vector<int> test_function() { return {1, 2, 3}; }
-
+        vector< int > test_function() { return { 1, 2, 3 }; }
+        
         // 初始化列表可迭代。
-        for (int i : {-1, -2, -3}) {}
-
+        for( int i: { -1, -2, -3 } ) {
+        }
+        
         // 在函数调用里用列表初始化。
-        void TestFunction2(vector<int> v) {}
-        TestFunction2({1, 2, 3});
+        void TestFunction2( vector< int > v ) {}
+        TestFunction2( { 1, 2, 3 } );
 
     用户自定义类型也可以定义接收 ``std::initializer_list<T>`` 的构造函数和赋值运算符，以自动列表初始化：
 
     .. code-block:: c++
 
         class MyType {
-         public:
-          // std::initializer_list 专门接收 init 列表。
-          // 得以值传递。
-          MyType(std::initializer_list<int> init_list) {
-            for (int i : init_list) append(i);
-          }
-          MyType& operator=(std::initializer_list<int> init_list) {
-            clear();
-            for (int i : init_list) append(i);
-          }
+           public:
+              // std::initializer_list 专门接收 init 列表。
+              // 得以值传递。
+              MyType( std::initializer_list< int > init_list ) {
+                 for( int i: init_list )
+                    append( i );
+              }
+              MyType& operator=( std::initializer_list< int > init_list ) {
+                 clear();
+                 for( int i: init_list )
+                    append( i );
+              }
         };
-        MyType m{2, 3, 5, 7};
+        MyType m{ 2, 3, 5, 7 };
 
     最后，列表初始化也适用于常规数据类型的构造，哪怕没有接收 ``std::initializer_list<T>`` 的构造函数。
 
     .. code-block:: c++
 
-        double d{1.23};
+        double d{ 1.23 };
         // MyOtherType 没有 std::initializer_list 构造函数，
-         // 直接上接收常规类型的构造函数。
+        // 直接上接收常规类型的构造函数。
         class MyOtherType {
-         public:
-          explicit MyOtherType(string);
-          MyOtherType(int, string);
+           public:
+              explicit MyOtherType( string );
+              MyOtherType( int, string );
         };
-        MyOtherType m = {1, "b"};
+        MyOtherType m = { 1, "b" };
         // 不过如果构造函数是显式的（explict），您就不能用 `= {}` 了。
-        MyOtherType m{"b"};
+        MyOtherType m{ "b" };
 
     千万别直接列表初始化 auto 变量，看下一句，估计没人看得懂：
 
     .. warning::
         .. code-block:: c++
 
-            auto d = {1.23};        // d 即是 std::initializer_list<double>
+            auto d = { 1.23 };        // d 即是 std::initializer_list< double >
 
     .. code-block:: c++
 
-        auto d = double{1.23};  // 善哉 -- d 即为 double, 并非 std::initializer_list.
+        auto d = double{ 1.23 };  // 善哉 -- d 即为 double, 并非 std::initializer_list.
 
     至于格式化，参见 :ref:`braced-initializer-list-format`.
 
@@ -780,9 +791,9 @@
 
     .. code-block:: c++
 
-        std::sort(v.begin(), v.end(), [](int x, int y) {
-            return Weight(x) < Weight(y);
-        });
+        std::sort( v.begin(), v.end(), []( int x, int y ) {
+           return Weight( x ) < Weight( y );
+        } );
 
     C++11 首次提出 Lambdas, 还提供了一系列处理函数对象的工具，比如多态包装器（polymorphic wrapper） ``std::function``.
 
