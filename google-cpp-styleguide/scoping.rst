@@ -25,9 +25,9 @@
     .. code-block:: c++
 
         namespace X {
-        inline namespace Y {
-        void foo();
-        }  // namespace Y
+           inline namespace Y {
+              void foo();
+           }  // namespace Y
         }  // namespace X
 
     ``X::Y::foo()`` 与 ``X::foo()`` 彼此可代替。内联命名空间主要用来保持跨版本的 ABI 兼容性。
@@ -57,27 +57,26 @@
             // .h 文件
             namespace mynamespace {
 
-            // 所有声明都置于命名空间中
-            // 注意不要使用缩进
-            class MyClass {
-                public:
-                ...
-                void Foo();
-            };
+               // 所有声明都置于命名空间中
+               // 注意不要使用缩进
+               class MyClass {
+                  public:
+                     ... void Foo();
+               };
 
-            } // namespace mynamespace
+            }   // namespace mynamespace
+
 
         .. code-block:: c++
 
             // .cc 文件
             namespace mynamespace {
 
-            // 函数定义都置于命名空间中
-            void MyClass::Foo() {
-                ...
-            }
+               // 函数定义都置于命名空间中
+               void MyClass::Foo() { ... }
 
-            } // namespace mynamespace
+            }   // namespace mynamespace
+
 
         更复杂的 ``.cc`` 文件包含更多, 更复杂的细节, 比如 gflags 或 using 声明。
 
@@ -85,13 +84,13 @@
 
             #include "a.h"
 
-            DEFINE_FLAG(bool, someflag, false, "dummy flag");
+            DEFINE_FLAG( bool, someflag, false, "dummy flag" );
 
             namespace a {
 
             ...code for a...                // 左对齐
 
-            } // namespace a
+            }   // namespace a
 
     - 不要在命名空间 ``std`` 内声明任何东西, 包括标准库的类前置声明. 在 ``std`` 命名空间声明实体是未定义的行为, 会导致如不可移植. 声明标准库下的实体, 需要包含对应的头文件.
 
@@ -113,16 +112,16 @@
 
             // 在 .h 中使用别名缩短常用的命名空间
             namespace librarian {
-            namespace impl {  // 仅限内部使用
-            namespace sidetable = ::pipeline_diagnostics::sidetable;
-            }  // namespace impl
+               namespace impl {   // 仅限内部使用
+                  namespace sidetable = ::pipeline_diagnostics::sidetable;
+               }   // namespace impl
 
-            inline void my_inline_function() {
-              // 限制在一个函数中的命名空间别名
-              namespace baz = ::foo::bar::baz;
-              ...
-            }
-            }  // namespace librarian
+               inline void my_inline_function() {
+                  // 限制在一个函数中的命名空间别名
+                  namespace baz = ::foo::bar::baz;
+                  ...
+               }
+            }   // namespace librarian
 
     - 禁止用内联命名空间
 
@@ -148,8 +147,8 @@
     .. code-block:: c++
 
         namespace {
-        ...
-        }  // namespace
+           ...
+        }   // namespace
 
 .. _nonmember-static-member-and-global-functions:
 
@@ -175,27 +174,27 @@
     .. code-block:: c++
 
         namespace myproject {
-        namespace foo_bar {
-        void Function1();
-        void Function2();
-        }  // namespace foo_bar
-        }  // namespace myproject
+           namespace foo_bar {
+              void Function1();
+              void Function2();
+           }   // namespace foo_bar
+        }   // namespace myproject
 
     而非
 
     .. code-block:: c++
 
         namespace myproject {
-        class FooBar {
-         public:
-          static void Function1();
-          static void Function2();
-        };
-        }  // namespace myproject
+           class FooBar {
+              public:
+                 static void Function1();
+                 static void Function2();
+           };
+        }   // namespace myproject
 
     定义在同一编译单元的函数, 被其他编译单元直接调用可能会引入不必要的耦合和链接时依赖; 静态成员函数对此尤其敏感. 可以考虑提取到新类中, 或者将函数置于独立库的命名空间内.
 
-    如果你必须定义非成员函数, 又只是在 ``.cc`` 文件中使用它, 可使用匿名 :ref:`namespaces` 或 ``static`` 链接关键字 (如 ``static int Foo() {...}``) 限定其作用域.
+    如果你必须定义非成员函数, 又只是在 ``.cc`` 文件中使用它, 可使用匿名 :ref:`namespaces` 或 ``static`` 链接关键字 (如 ``static int Foo() { ... }``) 限定其作用域.
 
 .. _local-variables:
 
@@ -211,7 +210,7 @@ C++ 允许在函数的任何位置声明变量. 我们提倡在尽可能小的�
     .. code-block:: c++
 
         int i;
-        i = f(); // 坏——初始化和声明分离
+        i = f();   // 坏——初始化和声明分离
 
     .. code-block:: c++
 
@@ -219,20 +218,21 @@ C++ 允许在函数的任何位置声明变量. 我们提倡在尽可能小的�
 
     .. code-block:: c++
 
-        vector<int> v;
-        v.push_back(1); // 用花括号初始化更好
-        v.push_back(2);
+        vector< int > v;
+        v.push_back( 1 ); // 用花括号初始化更好
+        v.push_back( 2 );
 
     .. code-block:: c++
 
-        vector<int> v = {1, 2}; // 好——v 一开始就初始化
+        vector< int > v = { 1, 2 }; // 好——v 一开始就初始化
 
 
 属于 ``if``, ``while`` 和 ``for`` 语句的变量应当在这些语句中正常地声明，这样子这些变量的作用域就被限制在这些语句中了，举例而言:
 
     .. code-block:: c++
 
-        while (const char* p = strchr(str, '/')) str = p + 1;
+        while( const char* p = strchr( str, '/' ) )
+           str = p + 1;
 
 
 .. warning:: 有一个例外, 如果变量是一个对象, 每次进入作用域都要调用其构造函数, 每次退出作用域都要调用其析构函数. 这会导致效率降低.
@@ -240,18 +240,18 @@ C++ 允许在函数的任何位置声明变量. 我们提倡在尽可能小的�
 .. code-block:: c++
 
     // 低效的实现
-    for (int i = 0; i < 1000000; ++i) {
-        Foo f;                  // 构造函数和析构函数分别调用 1000000 次!
-        f.DoSomething(i);
+    for( int i = 0; i < 1000000; ++i ) {
+       Foo f;   // 构造函数和析构函数分别调用 1000000 次!
+       f.DoSomething( i );
     }
 
 在循环作用域外面声明这类变量要高效的多:
 
 .. code-block:: c++
 
-    Foo f;                      // 构造函数和析构函数只调用 1 次
-    for (int i = 0; i < 1000000; ++i) {
-        f.DoSomething(i);
+    Foo f;   // 构造函数和析构函数只调用 1 次
+    for( int i = 0; i < 1000000; ++i ) {
+       f.DoSomething( i );
     }
 
 .. _static-and-global-variables:
